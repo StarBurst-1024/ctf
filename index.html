@@ -291,38 +291,42 @@ document.getElementById("total").innerText="Tổng: "+totalPrice.toLocaleString(
 }
 
 function checkout(){
-if(cart.length === 0){
-alert("Giỏ hàng trống!");
-return;
-}
+    // ❌ nếu giỏ hàng trống
+    if(cart.length === 0){
+        alert("Giỏ hàng trống!");
+        return;
+    }
 
-let totalPrice=0;
-cart.forEach(i=>totalPrice+=i.price*i.qty);
+    // 💰 tính tổng tiền
+    let totalPrice = cart.reduce((sum, item) => {
+        return sum + item.price * item.qty;
+    }, 0);
 
-// mã đơn 6 số
-let code = Date.now().toString().slice(-6);
+    // 🔢 tạo mã đơn 6 số (không trùng gần như tuyệt đối)
+    let code = Date.now().toString().slice(-6);
 
-// tạo đơn
-const order = {
-code: code,
-items: cart,
-total: totalPrice,
-time: new Date().toLocaleString(),
-};
+    // 📦 tạo object đơn hàng
+    const order = {
+        code: code,
+        items: cart,
+        total: totalPrice,
+        time: new Date().toLocaleString()
+    };
 
-// gửi Firebase
-push(ref(db, "orders"), order);
+    // 🚀 gửi lên Firebase
+    push(ref(db, "orders"), order);
 
-alert(`Thanh toán thành công 💖
+    // ✅ thông báo cho khách
+    alert(`Thanh toán thành công 💖
 Mã đơn: ${code}
 Tổng: ${totalPrice.toLocaleString()}đ`);
 
-// reset
-cart=[];
-count.innerText=0;
-cartItems.innerHTML="";
-document.getElementById("total").innerText="Tổng: 0đ";
-cartPage.classList.remove("active");
+    // 🔄 reset giỏ hàng
+    cart = [];
+    count.innerText = 0;
+    cartItems.innerHTML = "";
+    document.getElementById("total").innerText = "Tổng: 0đ";
+    cartPage.classList.remove("active");
 }
 window.startShop = startShop;
 window.goHome = goHome;
