@@ -302,17 +302,12 @@ cart.forEach(i=>totalPrice+=i.price*i.qty);
 // mã đơn 6 số
 let code = Date.now().toString().slice(-6);
 
-// lấy bàn từ QR
-const params = new URLSearchParams(window.location.search);
-const table = params.get("table") || "unknown";
-
 // tạo đơn
 const order = {
 code: code,
 items: cart,
 total: totalPrice,
 time: new Date().toLocaleString(),
-table: table
 };
 
 // gửi Firebase
